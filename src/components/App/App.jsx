@@ -17,36 +17,49 @@ export class App extends Component {
     status: "idle",
     showModal: false,
     modalImage: null,
+    loadMore: true,
   }
 
   
 
-  async componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(_, prevState) {
+    
     const prevQuery = prevState.searchQuery;
     const newQuery = this.state.searchQuery;
     const prevPage = prevState.page;
     const newPage = this.state.page
 
     if (prevQuery !== newQuery || prevPage !== newPage) {
+      
       this.setState({ status: "pending" });
       try {
         const result = await fetchImage(newQuery, newPage);
+        console.log(result);
 
         if (!result.length) {
           throw new Error();
+        }
+
+        if (result.length < 12) {
+          this.setState({ loadMore: false });
         }
 
         this.setState(prevState => ({
           images: [...prevState.images, ...result],
           status: "resolved"
         }))
+
+      //  console.log(this.state.images); 
         
       } catch (err) {
         this.setState({ status: "rejected" });
         Notification();
       }
-    }   
+
+    }
+    
   }
+
 
   toggleModal = () => {
     this.setState(({ showModal }) => ({
@@ -58,8 +71,10 @@ export class App extends Component {
   loadMore = () => {
     this.setState(prevState => ({
       page: prevState.page + 1,
-       
+      
     }))
+
+    
   }
 
   FindModalImage = (id, img, tags) => {
@@ -77,7 +92,7 @@ export class App extends Component {
   }
 
   render() {
-    const { images, modalImage,showModal, status } = this.state;
+    const { images, modalImage,showModal, status, loadMore } = this.state;
     
       if (status === 'idle') {
         return  <Searchbar onSubmit={this.formSubmitHandler} />
@@ -107,7 +122,9 @@ export class App extends Component {
                   {showModal && (
                     <Modal onClose={ this.toggleModal} modalImage={modalImage} />
                   )}
-                  {images.length !== 0 && <LoadMoreBtn loadMore={this.loadMore} />}
+                  
+                  {loadMore && <LoadMoreBtn loadMore={this.loadMore} />}
+                  
                 </Wrapper>     
       }
       
