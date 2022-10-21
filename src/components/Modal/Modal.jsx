@@ -34,6 +34,7 @@ export class Modal extends Component {
             src={this.props.modalImage.img}
             alt={this.props.modalImage.tags}
             key={this.props.modalImage.id}
+            loading="lazy"
           />
         </ModWindow>
       </Overlay>, modalRoot,

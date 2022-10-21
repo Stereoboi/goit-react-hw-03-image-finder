@@ -8,7 +8,8 @@ export const GalleryItem = ({ imageData, modalImage, toggleModal }) => {
       <Image
         src={imageData.webformatURL}
         alt={imageData.tags}
-        onClick={() => { toggleModal(); modalImage()}}
+        onClick={() => { toggleModal(); modalImage() }}
+        loading="lazy"
         />
     </ImageGalleryItem>
   )
