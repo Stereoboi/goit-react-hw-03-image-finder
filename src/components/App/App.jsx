@@ -31,7 +31,7 @@ export class App extends Component {
 
     if (prevQuery !== newQuery || prevPage !== newPage) {
       
-      this.setState({ status: "pending" });
+      this.setState({ status: "pending", loadMore: true, });
       try {
         const result = await fetchImage(newQuery, newPage);
         console.log(result);
@@ -73,8 +73,6 @@ export class App extends Component {
       page: prevState.page + 1,
       
     }))
-
-    
   }
 
   FindModalImage = (id, img, tags) => {
